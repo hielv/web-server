@@ -5,7 +5,6 @@
 # Убедитесь, что при подключении к серверу, если не указан необходимый ресурс он отдает содержимое страницы index.html.
 from http.server import SimpleHTTPRequestHandler, HTTPServer
 
-
 # Указываем порт, на котором будет работать сервер
 port = 80
 
@@ -29,4 +28,6 @@ try:
 except KeyboardInterrupt:
     print("\nСервер остановлен")
     server.socket.close()
+
+
 

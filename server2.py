@@ -1,34 +1,15 @@
 from http.server import SimpleHTTPRequestHandler, HTTPServer
 
-# Указываем порт, на котором будет работать сервер
-port = 80
+# Указываем рабочую директорию сервера
+directory = 'C:/Users/HP/OneDrive - НИУ Высшая школа экономики/Рабочий стол/web-server/index.html/'
 
-# Класс для обработки HTTP запросов
-class MyHTTPRequestHandler(SimpleHTTPRequestHandler):
-    def translate_path(self, path):
-        # Определяем директорию, из которой будут отдаваться файлы
-        root = 'C:/Users/HP/Downloads'
-        return SimpleHTTPRequestHandler.translate_path(self, root + path)
+# Создаем класс-обработчик запросов, наследуясь от SimpleHTTPRequestHandler
+class MyHandler(SimpleHTTPRequestHandler):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, directory=directory, **kwargs)
 
-    def do_GET(self):
-        self.send_response(200)  # Отправляем код состояния 200 (OK)
-        self.send_header('Content-type', 'text/html')  # Указываем тип содержимого
-        self.end_headers()
-        
-        if self.path == '/':
-            self.path = '/index.html'
-        return SimpleHTTPRequestHandler.do_GET(self)
-
-    def do_HEAD(self):
-        self.send_response(200)  # Отправляем код состояния 200 (OK)
-        self.send_header('Content-type', 'text/html')  # Указываем тип содержимого
-        self.end_headers()
-
-try:
-    # Создаем HTTP сервер
-    server = HTTPServer(('localhost', port), MyHTTPRequestHandler)
-    print(f"Сервер запущен на порту {port}")
-    server.serve_forever()
-except KeyboardInterrupt:
-    print("\nСервер остановлен")
-    server.socket.close()
+# Запускаем сервер на порту 80
+server_address = ('', 80)
+httpd = HTTPServer(server_address, MyHandler)
+print('Сервер запущен...')
+httpd.serve_forever()
